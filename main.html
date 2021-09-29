@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+   <head>
+    <link rel="stylesheet" href="style.css">
+    <script src="./common/webgl-utils.js"></script>
+    <script src="./common/webgl-debug.js"></script>
+    <script src="./common/cuon-utils.js"></script>
+    <script src="./common/cuon-matrix.js"></script>
+    <script src="shaders.js"></script>
+    <script src="objects.js"></script>
+    <script src="main.js"></script>
+    </head>
+    <body onload="main()">
+
+      <canvas id="webgl" width="700" height="700"></canvas>
+
+    <div class="container">
+     
+      <div>
+        Create New Object
+        <button onclick="addFigure('cube')">Cube</button>
+        <button onclick="addFigure('pyramid')"> Pyramid</button>
+        <button onclick="addFigure('conus')"> Conus</button>
+      </div>
+
+      <div class="flex-container">
+        <div class="flex-child">
+          <label> Select </label>
+           <select name="Object number" id="objectIndex"></select>
+        </div>
+        <div class="flex-child">
+          <label> Scale </label>
+          <input type="range" id='size' min='0.2' max='3' step='0.2' oninput="scale()">
+        </div>
+        <div class="flex-child">
+          <button onclick="removeFigure()">Remove</button>
+        </div>
+      </div>
+
+      <div class="flex-container">
+        <div class="flex-child">
+          <div>
+            <label> Move X </label>
+            <input  type="range" id='moveX'  min='-2' max='2' step='0.2' oninput="move('x')">
+          </div>  
+  
+          <div>
+            <label> Move Y </label>
+          <input type="range" id='moveY'  min='-2' max='2' step='0.2' oninput="move('y')">
+          </div>
+  
+          <div>
+            <label> Move Z </label>
+            <input type="range" id='moveZ' min='-3' max='3' step='0.4' oninput="move('z')">
+          </div>
+        </div>
+        <div class="flex-child">
+          <div>
+            <label> Rotate X </label>
+            <input  type="range" id='rotateX'  min='-180' max='180' step='1' oninput="rotate('x')">
+          </div>  
+    
+          <div>
+            <label> Rotate Y </label>
+          <input type="range" id='rotateY'  min='-180' max='180' step='1' oninput="rotate('y')">
+          </div>
+    
+          <div>
+            <label> Rotate Z </label>
+            <input type="range" id='rotateZ' min='-180' max='180' step='1' oninput="rotate('z')">
+          </div>
+        </div>
+      </div>
+
+      <div class="flex-container">
+        <div class="flex-child">
+          <div>
+            <label>Camera X</label>
+            <input type="range" id='cameraX' min='-14' max='14' step='1' value="0" oninput="updateCamera('cameraX')">
+            </div>
+          <div>
+            <label> Camera Y</label>
+            <input type="range" id='cameraY' min='-14' max='14' step='1' value="3" oninput="updateCamera('cameraY')">
+            </div>
+  
+          <div>
+            <label> Camera Z</label>
+           <input type="range" id='cameraZ' min='-14' max='14' step='1' value="6.5" oninput="updateCamera('cameraZ')">
+         </div>
+  
+        </div>
+
+        <div class="flex-child">
+          <div>
+            <label> Fov Perspective</label>
+            <input type="range" id='perspectiveFov' min='6' max='99' value="47" step='1' oninput="updateCamera('perspectiveFov')">
+         </div>
+  
+          <div>
+            <label> Near Perspective</label>
+            <input type="range" id='perspectiveNear' min='0.4' max='16' value="2" step='0.7' oninput="updateCamera('perspectiveNear')">
+          </div>
+  
+          <div>
+            <label>Far Perspective</label>
+            <input type="range" id='perspectiveFar' min='6' max='30' value="30" step='1' oninput="updateCamera('perspectiveFar')">
+          </div>
+        </div>
+
+      </div>
+     
+      </div>
+  
+</body>
+</html>

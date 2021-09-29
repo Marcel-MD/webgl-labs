@@ -1,0 +1,43 @@
+body {
+    background-color: #333a45;
+    font-size: medium;
+    color: white;
+}
+
+button {
+    margin: 10px 15px;
+    width: 100px;
+    height: 30px;
+    border-radius: 8px;
+    color: white;
+    background: #333a45;
+    border: 2px solid white;
+}
+
+button:hover {
+    background-color: blue;
+}
+
+body {
+    display: inline-flex;
+    flex-direction: row;
+}
+
+.container {
+    width: 580px;
+    margin-left: 0;
+    background-color: #333a45;
+}
+
+.input {
+    background-color: white;
+}
+
+.flex-container {
+    display: flex;
+}
+
+.flex-child {
+    flex: 1;
+    padding: 10px;
+}
