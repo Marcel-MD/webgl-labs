@@ -19,7 +19,7 @@ function main() {
     }
 
     if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
-        alert("Failed to intialize shaders.");
+        alert("Failed to initialize shaders.");
         return;
     }
 
@@ -62,8 +62,15 @@ function render(gl) {
         transformMatrix
             .setTranslate(figure.moveX, figure.moveY, figure.moveZ)
             .scale(figure.scale, figure.scale, figure.scale);
+
         var u_Transform = gl.getUniformLocation(gl.program, "u_Transform");
         gl.uniformMatrix4fv(u_Transform, false, transformMatrix.elements);
+
+        var u_DefaultTranslate = gl.getUniformLocation(
+            gl.program,
+            "u_DefaultTranslate"
+        );
+        gl.uniformMatrix4fv(u_DefaultTranslate, false, figure.defaultTranslate);
 
         var rotateMatrix = new Matrix4();
         rotateMatrix.setRotate(
@@ -72,14 +79,9 @@ function render(gl) {
             figure.rotateY,
             figure.rotateZ
         );
+
         var u_Rotate = gl.getUniformLocation(gl.program, "u_Rotate");
         gl.uniformMatrix4fv(u_Rotate, false, rotateMatrix.elements);
-
-        var u_DefaultTranslate = gl.getUniformLocation(
-            gl.program,
-            "u_DefaultTranslate"
-        );
-        gl.uniformMatrix4fv(u_DefaultTranslate, false, figure.defaultTranslate);
 
         gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0);
     }

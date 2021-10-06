@@ -62,6 +62,7 @@ function createPyramid() {
         new Float32Array(colors)
     );
 }
+
 function createConus() {
     var vertices = [];
     var indices = [];
