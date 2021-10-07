@@ -3,6 +3,9 @@ class Figure {
         this.vertices = vertices;
         this.colors = colors;
         this.indices = indices;
+        // This array defines each face as two triangles, using the
+        // indices into the vertex array to specify each triangle's
+        // position.
 
         this.angle = 0;
         this.rotateX = 1;
@@ -68,8 +71,8 @@ function createConus() {
     var indices = [];
     const sectors = (2 * Math.PI) / 100;
     var angle;
-    vertices.push(0, 0.5, 0, 1, 0, 1);
 
+    vertices.push(0, 0.5, 0, 1, 0, 1);
     for (let i = 0; i < 100; i++) {
         angle = i * sectors;
 

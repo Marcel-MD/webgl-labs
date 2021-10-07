@@ -1,4 +1,4 @@
-figures = [];
+figures = []; //array of Figure objects
 cameraValues = {
     perspectiveFov: 45,
     perspectiveAspect: 1,
@@ -24,27 +24,29 @@ function main() {
     }
 
     setInterval(() => {
-        render(gl);
+        //repeatedly calls a function or executes a code snippet,
+        render(gl); //with a fixed time delay between each call (milliseconds)
     }, 15);
 }
 
 function render(gl) {
-    gl.clearColor(0.2, 0.227, 0.271, 1);
-    gl.enable(gl.DEPTH_TEST);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.clearColor(0.2, 0.227, 0.271, 1); //the color values used when clearing color buffers.
+    gl.enable(gl.DEPTH_TEST); //Activates depth comparisons and updates to the depth buffer.
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); //clears buffers to preset values (accepts multiple values)
 
     var viewMatrix = new Matrix4();
     viewMatrix
         .setPerspective(
-            cameraValues.perspectiveFov,
-            cameraValues.perspectiveAspect,
-            cameraValues.perspectiveNear,
-            cameraValues.perspectiveFar
+            cameraValues.perspectiveFov, //fovy. Viewing vertical angle in degrees.
+            cameraValues.perspectiveAspect, //aspect. Aspect ratio.
+            cameraValues.perspectiveNear, //znear. Distance between a camera to the near clipping plane.
+            cameraValues.perspectiveFar //zfar. Distance between a camera and far clipping plane.
         )
         .lookAt(
-            cameraValues.cameraX,
-            cameraValues.cameraY,
-            cameraValues.cameraZ,
+            //.lookAt ( eye : Vector3, center : Vector3, up : Vector3, )
+            cameraValues.cameraX, //Constructs a rotation matrix, looking from eye towards center oriented by the up vector.
+            cameraValues.cameraY, //It computes a matrix that transforms world space to view space.
+            cameraValues.cameraZ, //It generates a matrix for rasterization, in which an object must be transformed from the world into the view.
             0,
             0,
             0,
@@ -53,14 +55,23 @@ function render(gl) {
             0
         );
     var u_Mvp = gl.getUniformLocation(gl.program, "u_Mvp");
+    //returns the location of a specific uniform variable
+    //program - The WebGLProgram in which to locate the specified uniform variable.
+    //name - A DOMString specifying the name of the uniform variable whose location is to be returned.
+
     gl.uniformMatrix4fv(u_Mvp, false, viewMatrix.elements);
+    // specifies matrix values for uniform variables,
+    //takes as the input value 4-component square matrix.
+    //location - A WebGLUniformLocation object containing the location of the uniform attribute to modify. The location is obtained using getUniformLocation().
+    //transpose - A GLboolean specifying whether to transpose the matrix. Must be false.
+    //value - A Float32Array or sequence of GLfloat values. The values are assumed to be supplied in column major order.
 
     for (let figure of figures) {
-        var n = initVertexBuffers(gl, figure);
+        var n = initVertexBuffers(gl, figure); //initialize vertices, color ... for figure
 
-        var transformMatrix = new Matrix4();
+        var transformMatrix = new Matrix4(); //A class representing a 4x4 matrix.
         transformMatrix
-            .setTranslate(figure.moveX, figure.moveY, figure.moveZ)
+            .setTranslate(figure.moveX, figure.moveY, figure.moveZ) //set the values for scaling and position
             .scale(figure.scale, figure.scale, figure.scale);
 
         var u_Transform = gl.getUniformLocation(gl.program, "u_Transform");
@@ -72,7 +83,7 @@ function render(gl) {
         );
         gl.uniformMatrix4fv(u_DefaultTranslate, false, figure.defaultTranslate);
 
-        var rotateMatrix = new Matrix4();
+        var rotateMatrix = new Matrix4(); //set the values for rotation
         rotateMatrix.setRotate(
             figure.angle,
             figure.rotateX,
@@ -83,7 +94,7 @@ function render(gl) {
         var u_Rotate = gl.getUniformLocation(gl.program, "u_Rotate");
         gl.uniformMatrix4fv(u_Rotate, false, rotateMatrix.elements);
 
-        gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0);
+        gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0); //draw the figure
     }
 }
 
@@ -93,11 +104,13 @@ function initVertexBuffers(gl, figure) {
     var colors = figure.colors;
     var FSIZE = vertices.BYTES_PER_ELEMENT;
 
+    /// SENDING THE DATA TO OUR SHADER!!!!!!!!
+
     var verticesBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, verticesBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
-    var a_Position = gl.getAttribLocation(gl.program, "a_Position");
-    gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, FSIZE * 6, 0);
+    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW); // SET THE DATA, SPECIFY THE ARRAY, vertices in this case
+    var a_Position = gl.getAttribLocation(gl.program, "a_Position"); // SET THE LOCATION (pick any variable name to be accessible within the v-shader)
+    gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, FSIZE * 6, 0); // DESCRIBE THE DATA: EACH vertex has 3 values of type FLOAT
     gl.enableVertexAttribArray(a_Position);
 
     var colorsBuffer = gl.createBuffer();
@@ -129,20 +142,21 @@ function addFigure(figureName) {
     }
 
     figures[figures.length - 1].defaultTranslate = new Matrix4().setTranslate(
+        //new figure pushed to the end of array
         0,
         0,
         0
-    ).elements;
+    ).elements; //.elements is the property of a Matrix4. An array. A column-major list of matrix values)
 
     select = document.getElementById("objectIndex");
     select.innerHTML = "";
 
     for (var i = 0; i < figures.length; i++) {
-        var opt = document.createElement("option");
+        var opt = document.createElement("option"); //method creates the HTML element specified by tagName
         opt.value = i;
         opt.class = "option";
         opt.innerHTML = "Object " + i;
-        select.appendChild(opt);
+        select.appendChild(opt); //add the new element to the page
     }
 }
 
